@@ -27,19 +27,37 @@ def diff(before, after):
 	if before == after:
 		return None
 	n = min(len(before), len(after))
-	prefix = 0
-	while prefix < n and before[prefix] == after[prefix]:
-		prefix += 1
-	suffix = 0
-	while (
-		suffix < n - prefix
-		and before[len(before) - 1 - suffix] == after[len(after) - 1 - suffix]
-	):
-		suffix += 1
+	prefix = _common_prefix(before, after, n)
+	suffix = _common_suffix(before, after, n - prefix)
 	# Keep a "\r\n" whole: a step never starts or ends between its halves.
 	while prefix and before[prefix - 1] == "\r" and before[prefix:prefix + 1] == "\n":
 		prefix -= 1
 	return Step(prefix, before[prefix:len(before) - suffix], after[prefix:len(after) - suffix])
+
+
+_BLOCK = 4096
+
+
+def _common_prefix(a, b, n):
+	"""Length of the common start of a and b (at most n), comparing whole
+	blocks first so a large file costs little."""
+	i = 0
+	while i + _BLOCK <= n and a[i:i + _BLOCK] == b[i:i + _BLOCK]:
+		i += _BLOCK
+	while i < n and a[i] == b[i]:
+		i += 1
+	return i
+
+
+def _common_suffix(a, b, n):
+	"""Length of the common end of a and b (at most n)."""
+	la, lb = len(a), len(b)
+	i = 0
+	while i + _BLOCK <= n and a[la - i - _BLOCK:la - i] == b[lb - i - _BLOCK:lb - i]:
+		i += _BLOCK
+	while i < n and a[la - 1 - i] == b[lb - 1 - i]:
+		i += 1
+	return i
 
 
 class History(object):

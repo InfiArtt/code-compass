@@ -195,6 +195,82 @@ class NotepadTests(v040.V040Tests):
 			gesture = self.undo()
 		gesture.send.assert_called_once()
 
+	# Review round.
+
+	def focus(self):
+		with mock.patch.object(v040.base.FakeEditableText, "event_gainFocus", create=True):
+			self.ed.event_gainFocus()
+
+	def test_file_open_after_save_never_brings_back_the_old_text(self):
+		self.ed.caret = len(PY)
+		self.type("x")
+		codeCompass._before_save(self.ed)
+		# File > Open other.py: Notepad calls the new document unchanged.
+		self.modified.return_value = False
+		self.use("other\r\n", "other.py - Notepad")
+		self.ed.caret = 0
+		self.focus()
+		self.modified.return_value = True
+		gesture = self.undo()
+		gesture.send.assert_called_once()
+		self.assertEqual(self.ed.text, "other\r\n")
+		# Typing at the top, then undo: only that typing goes.
+		self.type("# ")
+		self.undo()
+		self.assertEqual(self.ed.text, "other\r\n")
+
+	def test_file_new_in_an_untitled_document(self):
+		self.use("", "Untitled - Notepad")
+		self.focus()
+		self.ed.caret = 0
+		self.type("secret draft")
+		self.modified.return_value = False
+		self.use("", "Untitled - Notepad")
+		self.ed.caret = 0
+		self.focus()
+		self.modified.return_value = True
+		gesture = self.undo()
+		gesture.send.assert_called_once()
+		self.assertEqual(self.ed.text, "")
+
+	def test_first_typing_after_opening_can_be_undone(self):
+		self.use("x = 1\r\n", "fresh.py - Notepad")
+		self.ed.caret = 0
+		self.focus()
+		self.type("# a\r\n", pause=False)
+		self.type("# b\r\n")
+		self.undo()
+		self.undo()
+		self.assertEqual(self.ed.text, "x = 1\r\n")
+
+	def test_a_pause_with_another_window_in_front_keeps_the_steps(self):
+		with mock.patch.object(codeCompass.edit_control, "top_window", return_value=(100, "main.py - Notepad")):
+			codeCompass._undoHistories.clear()
+			codeCompass._undo_record(self.ed)
+			self.ed.caret = len(PY)
+			self.type("x = 1")
+			self.type("\r\ny = 2", pause=False)
+			# The Find dialog is in front when the typing pause ends.
+			MODS["api"].getForegroundObject.return_value = types.SimpleNamespace(name="Find")
+			codeCompass._undo_record(self.ed)
+			MODS["api"].getForegroundObject.return_value = types.SimpleNamespace(name="*main.py - Notepad")
+			self.undo()
+			self.undo()
+		self.assertEqual(self.ed.text, PY)
+
+	def test_history_belongs_to_notepads_own_window(self):
+		with mock.patch.object(codeCompass.edit_control, "top_window", return_value=(100, "*main.py - Notepad")):
+			self.assertEqual(codeCompass._undo_key(self.ed), (100, "main.py - Notepad"))
+
+	def test_large_file_steps_are_quick(self):
+		import time
+		big = "x = 1\r\n" * 700000
+		h = undo.History(big)
+		start = time.perf_counter()
+		h.record(big[:2000000] + "y" + big[2000000:])
+		self.assertLess(time.perf_counter() - start, 0.2)
+		self.assertEqual(h.steps[-1].start, 2000000)
+
 	def test_keys(self):
 		gestures = codeCompass.CodeEditor._CodeEditor__gestures
 		self.assertEqual(gestures["kb:control+z"], "ccUndo")

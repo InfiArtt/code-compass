@@ -50,6 +50,27 @@ EM_GETMODIFY = 0x00B8
 EM_SETMODIFY = 0x00B9
 
 
+GA_ROOT = 2
+
+
+def top_window(hwnd):
+	"""(handle, title) of the top-level window holding hwnd (Notepad's own
+	window, whatever window is in front), or (None, None)."""
+	try:
+		user32 = ctypes.windll.user32
+		user32.GetAncestor.restype = ctypes.c_void_p
+		user32.GetAncestor.argtypes = [ctypes.c_void_p, ctypes.c_uint]
+		user32.GetWindowTextW.argtypes = [ctypes.c_void_p, ctypes.c_wchar_p, ctypes.c_int]
+		root = user32.GetAncestor(hwnd, GA_ROOT) if hwnd else None
+		if not root:
+			return None, None
+		buf = ctypes.create_unicode_buffer(1024)
+		user32.GetWindowTextW(root, buf, 1024)
+		return root, buf.value
+	except (AttributeError, OSError):
+		return None, None
+
+
 def is_modified(hwnd):
 	"""The edit control's own "changed since saved" flag: True, False, or
 	None when it cannot be read."""

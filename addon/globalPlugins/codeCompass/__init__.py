@@ -750,23 +750,47 @@ def _undo_enabled(obj):
 	return _conf()["multiUndo"] and _writable_notepad(obj)
 
 
+def _undo_key(obj):
+	"""(window, title) of the document obj shows: Notepad's own top-level
+	window and title, not whatever window is in front (a Find dialog, or
+	another program after alt+tab), and the same when Word Wrap replaces
+	the edit control."""
+	hwnd = getattr(obj, "windowHandle", None)
+	root, title = edit_control.top_window(hwnd)
+	if root is None or title is None:
+		root, title = hwnd, _window_title(obj)
+	return root, title.lstrip("*")
+
+
 def _undo_history(obj, text):
 	"""The undo history of the document obj shows, started on text when new.
 	Another document in the window (a new title that is not this one saved
 	under a new name) starts a new history."""
-	hwnd = getattr(obj, "windowHandle", None)
-	title = _window_title(obj).lstrip("*")
-	entry = _undoHistories.get(hwnd)
+	root, title = _undo_key(obj)
+	entry = _undoHistories.get(root)
 	if entry is not None and entry["title"] != title:
-		snapshot = _saveSnapshots.get(hwnd)
-		if snapshot is not None and snapshot[0] == entry["title"] and snapshot[1] == entry["history"].base:
-			# Saved under a new name: the same document.
+		snapshot = _saveSnapshots.get(getattr(obj, "windowHandle", None))
+		if (
+			snapshot is not None and snapshot[0] == entry["title"]
+			and snapshot[1] == entry["history"].base and snapshot[1] == text
+		):
+			# Saved under a new name: the same document, the same text.
 			entry["title"] = title
 		else:
 			entry = None
 	if entry is None:
-		entry = _undoHistories[hwnd] = {"title": title, "history": undo.History(text)}
+		entry = _undoHistories[root] = {"title": title, "history": undo.History(text)}
 	return entry["history"]
+
+
+def _undo_replaced(obj, history, text):
+	"""True (and the history starts again on text) when the document was
+	replaced: changed, yet Notepad calls it unchanged, as after File > Open
+	or File > New. Undoing into it would bring back the other text."""
+	if text != history.base and edit_control.is_modified(obj.windowHandle) is False:
+		history.reset(text)
+		return True
+	return False
 
 
 def _undo_record(obj, text=None):
@@ -777,13 +801,8 @@ def _undo_record(obj, text=None):
 		if text is None:
 			text = _cache.get(obj).text
 		history = _undo_history(obj, text)
-		if text != history.base and edit_control.is_modified(obj.windowHandle) is False:
-			# Changed, yet Notepad calls it unchanged: another file was opened
-			# (or saved through the menu). Undoing into it would bring back
-			# the other text, so the history starts again here.
-			history.reset(text)
-			return
-		history.record(text)
+		if not _undo_replaced(obj, history, text):
+			history.record(text)
 	except Exception:
 		log.debugWarning("Code Compass: recording an undo step failed", exc_info=True)
 
@@ -805,6 +824,8 @@ def _undo_redo(obj, redo):
 	"""Undo or redo one step in obj. False when there was nothing to do."""
 	a = _cache.get(obj)
 	history = _undo_history(obj, a.text)
+	if _undo_replaced(obj, history, a.text):
+		return False
 	change = history.redo(a.text) if redo else history.undo(a.text)
 	if change is None:
 		return False
@@ -997,6 +1018,7 @@ def _after_save(obj, viaDialog=False):
 		_check_after_save(obj)
 	else:
 		_play("save")
+	_saveSnapshots.pop(hwnd, None)
 
 
 def _check_after_save(obj):
@@ -1562,6 +1584,9 @@ class CodeEditor(NVDAObject):
 	def event_gainFocus(self):
 		super(CodeEditor, self).event_gainFocus()
 		hwnd = getattr(self, "windowHandle", None)
+		# Undo starts here, before any typing (and notices a document that
+		# File > Open or New replaced).
+		_undo_record(self)
 		# Back in the editor: was the file changed by another program?
 		core.callLater(150, _check_disk, self)
 		before = _goToPending.pop(hwnd, None)
