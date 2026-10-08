@@ -280,6 +280,7 @@ DIALOG_LABELS = {
 		"Say the &function or class the caret moves into",
 		"Automatic &indentation on Enter and closing brackets (Windows 10 Notepad)",
 		"Add closing brackets and &quotes automatically (Windows 10 Notepad)",
+		"Undo and redo many steps with control+Z and control+Y (Windows &10 Notepad)",
 		"Tone pitc&h for level 1 (Hz):", "Semi&tones higher per level:",
 		"Applications with level tones and quick keys (co&mma separated):",
 		"Lan&guage of Code Compass messages:",

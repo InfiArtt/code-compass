@@ -269,6 +269,11 @@ NEW = {
 	"1 second": "1 detik",
 	"line {line}, warning: {message}": "baris {line}, peringatan: {message}",
 	"Put the caret inside the parentheses of a call": "Taruh kursor di dalam kurung pemanggilan fungsi",
+	# Undo.
+	"Nothing to undo": "Tidak ada yang bisa dibatalkan",
+	"Nothing to redo": "Tidak ada yang bisa diulang",
+	"Undo and redo many steps with control+Z and control+Y (Windows &10 Notepad)":
+		"Undo dan red&o berkali-kali dengan control+Z dan control+Y (Notepad Windows 10)",
 	# Reload.
 	"only spacing changed": "cuma spasi yang berubah",
 	"Reloads the file from disk, after asking when it has unsaved changes":

@@ -31,6 +31,7 @@ A line with a problem plays a low buzz after its level tone. See Problems below.
 ## Editing in Windows 10 Notepad
 
 - **Automatic indentation**: Enter keeps the line's indentation, adds a level after an opening bracket (or `:` in Python), and goes back a level after `return`, `pass`, `break`, `continue` or `raise` in Python. Enter between a pair such as `{}` puts the closing bracket on its own line and the caret on the line between. A closing bracket typed first on a line moves back to line up with its opening bracket.
+- **Undo and redo many steps**: control+Z goes back one step at a time, as far as you like, and control+Y (or control+shift+Z) goes forward again. A step is a run of typing, which ends when you pause for a second or move to another line, or one Code Compass command such as a line move, a comment or a rename. The line that changed is read. Going back to the text that is saved clears the "*" in the title. The steps last while the file is open; Notepad itself keeps only one.
 - **Closing brackets and quotes** (off by default, see Settings): typing `(` adds `)` after the caret; typing the closing one over it does not double it.
 - **Tab and shift+Tab** with several lines selected indent or outdent them. Shift+Tab with nothing selected outdents the caret's line. A plain Tab still types a tab.
 - **control+/** comments or uncomments the selected lines, or the caret's line, with the language's comment (`#`, `//`, `--`).
@@ -164,6 +165,7 @@ NVDA menu, Preferences, Settings, Code Compass:
 - Examine code while typing: off, play a sound for new problems (the default), or play a sound and say them.
 - Say the function or class the caret moves into.
 - Automatic indentation on Enter and closing brackets (Windows 10 Notepad).
+- Undo and redo many steps with control+Z and control+Y (Windows 10 Notepad). On by default.
 - Add closing brackets and quotes automatically (Windows 10 Notepad). Off by default. Typing the closing character yourself types over the one that was added, and Backspace right after an opening bracket removes both.
 - Tone pitch for level 1, and how many semitones higher each level is.
 - Applications with level tones and quick keys. The NVDA+shift+K commands work in any text editor.
@@ -174,6 +176,6 @@ NVDA menu, Preferences, Settings, Code Compass:
 - Windows 11's Notepad is a different program: level tones, navigation and reading commands work there, but commands that change text do not.
 - VS Code only exposes part of a file to screen readers, so levels there can be wrong. VS Code is not enabled by default.
 - The outline and function moves find declarations with patterns, not a full parser. Unusual code styles may be missed.
-- Notepad keeps only one step of undo: control+Z undoes the last Code Compass change, not the one before.
+- Undo steps are kept while NVDA runs: after restarting NVDA, or with the setting turned off, control+Z is Notepad's own single step again.
 - Python syntax errors come from Python's own parser, which reports only the first one in a file.
 - Code inside strings is understood for Python f-strings, JavaScript template literals and Swift's \\( ). In other languages' interpolated strings, such as C#'s `$"{name}"` or Kotlin's and Dart's `"${name}"`, the name is text: rename, uses and completion skip it there.

@@ -27,7 +27,7 @@ Run the tests before committing, and add a test when you fix a bug.
 
 ## Project-specific notes
 
-- `analyzer.py`, `snippets.py`, `editing.py`, `problems.py`, `filepath.py`, `edit_control.py`, `bookmarks.py` and `programs.py` must stay free of NVDA imports so they can be tested directly. NVDA-specific code goes in `__init__.py`.
+- `analyzer.py`, `snippets.py`, `editing.py`, `problems.py`, `filepath.py`, `edit_control.py`, `bookmarks.py`, `programs.py` and `undo.py` must stay free of NVDA imports so they can be tested directly. NVDA-specific code goes in `__init__.py`.
 - The tests run on Linux in CI, so Windows-only calls (ctypes.windll, winreg) must happen only when a function is called, and tests must replace them (see `tests/test_programs.py`).
 - `addon/sounds/*.wav` are Visual Studio Code's accessibility signal sounds (MIT, see `addon/sounds/LICENSE-vscode.txt`), converted from MP3 and trimmed. NVDA plays them with `nvwave.playWaveFile`; keep them 16-bit PCM WAV.
 - Commands that change text only run in a writable, multi-line Win32 edit control (classic Notepad), through `edit_control.replace`, which uses EM_SETSEL and EM_REPLACESEL (one undo step, offsets in UTF-16 units). Elsewhere their keys pass through unchanged. `tests/test_plugin_v040.py` replaces `edit_control.replace` with a fake that edits the test editor's text.

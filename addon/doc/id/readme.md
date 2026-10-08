@@ -31,6 +31,7 @@ Baris yang ada masalahnya bunyi dengung rendah sesudah nada levelnya. Lihat bagi
 ## Ngedit di Notepad Windows 10
 
 - **Indentasi otomatis**: Enter ngikutin indentasi baris sekarang, nambah satu level sesudah kurung buka (atau `:` di Python), dan mundur satu level sesudah `return`, `pass`, `break`, `continue`, atau `raise` di Python. Enter di antara pasangan kayak `{}` naruh kurung tutupnya di baris sendiri, dan kursornya di baris tengah. Kurung tutup yang diketik paling awal di sebuah baris otomatis mundur sejajar sama kurung bukanya.
+- **Undo dan redo berkali-kali**: control+Z mundur satu langkah, sejauh yang kamu mau, dan control+Y (atau control+shift+Z) maju lagi. Satu langkah itu satu rombongan ketikan (selesai kalau kamu berhenti sedetik atau pindah baris), atau satu perintah Code Compass, misalnya pindah baris, komentar, atau rename. Baris yang berubah dibacain. Kalau balik ke teks yang udah disimpan, tanda "*" di judul ilang. Langkah-langkahnya ada selama file-nya kebuka; Notepad sendiri cuma nyimpen satu.
 - **Kurung tutup dan kutip otomatis** (mati secara default, lihat Pengaturan): ngetik `(` langsung nambah `)` sesudah kursor, dan ngetik kurung tutupnya nggak bikin dobel.
 - **Tab dan shift+Tab** pas beberapa baris dipilih: nambah atau ngurangin indentasi baris-baris itu. Shift+Tab tanpa pilihan ngurangin indentasi baris kursor. Tab biasa tetap ngetik tab.
 - **control+/**: ngomentarin atau batalin komentar di baris yang dipilih, atau di baris kursor, pakai tanda komentar bahasanya (`#`, `//`, `--`).
@@ -164,6 +165,7 @@ Menu NVDA, Preferences, Settings, Code Compass:
 - Periksa kode saat mengetik: mati, bunyiin suara buat masalah baru (default), atau bunyiin suara sekalian dibacain.
 - Sebutin fungsi atau class yang dimasuki kursor.
 - Indentasi otomatis saat Enter dan kurung tutup (Notepad Windows 10).
+- Undo dan redo berkali-kali dengan control+Z dan control+Y (Notepad Windows 10). Nyala secara default.
 - Tambahin kurung tutup dan kutip otomatis (Notepad Windows 10). Mati secara default. Kalau kamu ngetik sendiri karakter penutupnya, yang tadi ditambahin bakal ditimpa, dan Backspace persis setelah kurung buka ngapus dua-duanya.
 - Tinggi nada level 1, dan berapa semitone naiknya tiap level.
 - Aplikasi yang dapat nada level dan tombol cepat. Perintah lewat NVDA+shift+K jalan di semua editor teks.
@@ -174,6 +176,6 @@ Menu NVDA, Preferences, Settings, Code Compass:
 - Notepad Windows 11 itu program yang beda: nada level, navigasi, dan perintah yang cuma baca jalan di sana, tapi perintah yang ngubah teks nggak.
 - VS Code cuma ngasih sebagian isi file ke screen reader, jadi levelnya bisa salah di sana. VS Code nggak aktif secara default.
 - Outline dan lompat per fungsi nyari deklarasi pakai pola, bukan parser lengkap. Gaya penulisan kode yang nggak biasa bisa kelewat.
-- Notepad cuma bisa undo satu langkah: control+Z ngebatalin perubahan Code Compass yang terakhir, bukan yang sebelumnya.
+- Langkah undo disimpan selama NVDA jalan: habis NVDA di-restart, atau kalau pengaturannya dimatiin, control+Z balik jadi undo bawaan Notepad yang cuma satu langkah.
 - Error sintaks Python dicek pakai parser Python sendiri, yang cuma ngelaporin error pertama di satu file.
 - Kode di dalam string dikenali buat f-string Python, template literal JavaScript, dan \\( ) di Swift. Di string interpolasi bahasa lain, misalnya `$"{name}"` di C# atau `"${name}"` di Kotlin dan Dart, namanya dianggap teks: rename, daftar pemakaian, dan autocomplete ngelewatin nama di situ.

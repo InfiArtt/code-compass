@@ -36,6 +36,7 @@ Editing in Windows 10 Notepad:
 - **Automatic indentation** on Enter and closing brackets, **Tab and shift+Tab** on several lines, **control+/** to comment.
 - **control+space** completion from the file's names, **control+shift+space** for a function's parameters.
 - **Delete, move and duplicate lines**, and **F2** to rename a name across the file.
+- **Undo and redo many steps** with control+Z and control+Y; Notepad alone keeps only one.
 - **Snippets**: save code you reuse and insert it later, indented to fit.
 
 Comments and strings are ignored when counting brackets; Python and YAML blocks also follow indentation. Messages are in English or Indonesian, chosen separately from NVDA's language. NVDA+shift+K then H lists the commands that work in any editor.

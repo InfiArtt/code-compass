@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 0.4.1
+
+### 🎉 New
+
+- **Undo and redo many steps in Windows 10's Notepad**, like in VS Code. Notepad itself keeps only one step, and its second control+Z brings the change back. Now **control+Z** goes back step by step and **control+Y** (or control+shift+Z) forward again. A step is a run of typing (it ends when you pause or move to another line) or one Code Compass command, such as a line move or a rename. The changed line is read, and going back to the saved text clears the "*" in the title. It can be turned off in the settings.
+
 ## Version 0.4.0
 
 The first public release. Coding in Notepad now works much more like a code editor such as VS Code.

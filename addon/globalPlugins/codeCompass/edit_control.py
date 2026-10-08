@@ -46,7 +46,15 @@ def is_single_line(windowClassName, hwnd):
 		return False
 
 
+EM_GETMODIFY = 0x00B8
 EM_SETMODIFY = 0x00B9
+
+
+def is_modified(hwnd):
+	"""The edit control's own "changed since saved" flag: True, False, or
+	None when it cannot be read."""
+	result = _send(hwnd, EM_GETMODIFY, 0, 0)
+	return None if result is None else bool(result)
 WM_COMMAND = 0x0111
 EN_CHANGE = 0x0300
 
