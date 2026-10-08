@@ -1287,18 +1287,27 @@ def _live_snapshot(found):
 	return sorted(_live_key(p) for p in found if p.kind != "run")
 
 
-def _schedule_live_check(obj):
-	"""After typing pauses, look for problems again and sound new ones."""
+def _live_baseline(obj):
+	"""Note the problems before a change (typing, a deletion, a paste, a
+	command), so the check after it knows which ones are new."""
 	if _conf()["liveCheck"] == "off":
-		return
+		return False
 	hwnd = getattr(obj, "windowHandle", None)
 	stored = _liveProblems.get(hwnd)
 	if stored is None or stored[0] != _live_file(obj):
-		# The problems before this typing started, in this document.
 		try:
 			_liveProblems[hwnd] = (_live_file(obj), _live_snapshot(_problems(obj, _cache.get(obj))))
 		except Exception:
-			return
+			return False
+	return True
+
+
+def _schedule_live_check(obj):
+	"""After typing or editing pauses, look for problems again and sound new
+	ones."""
+	if not _live_baseline(obj):
+		return
+	hwnd = getattr(obj, "windowHandle", None)
 	token = _liveChecks[hwnd] = _liveChecks.get(hwnd, 0) + 1
 	core.callLater(LIVE_CHECK_DELAY, _live_check, obj, token)
 
@@ -1347,6 +1356,7 @@ def _apply_edit(obj, a, start, end, newText, selStart=None, selEnd=None, timeout
 	step for control+Z. True on success. A command's edit is an undo step
 	of its own; with typing (auto-close, indentation while typing), it
 	joins the typing around it."""
+	_live_baseline(obj)
 	if not typing:
 		_undo_record(obj, a.text)
 	try:
@@ -1359,6 +1369,7 @@ def _apply_edit(obj, a, start, end, newText, selStart=None, selEnd=None, timeout
 		_forget_selection_change(obj)
 		if not typing:
 			_undo_record(obj, a.text[:start] + newText + a.text[end:])
+		_schedule_live_check(obj)
 	return ok
 
 
@@ -1585,8 +1596,9 @@ class CodeEditor(NVDAObject):
 		super(CodeEditor, self).event_gainFocus()
 		hwnd = getattr(self, "windowHandle", None)
 		# Undo starts here, before any typing (and notices a document that
-		# File > Open or New replaced).
+		# File > Open or New replaced); so does the list of known problems.
 		_undo_record(self)
+		_live_baseline(self)
 		# Back in the editor: was the file changed by another program?
 		core.callLater(150, _check_disk, self)
 		before = _goToPending.pop(hwnd, None)
@@ -1636,6 +1648,7 @@ class CodeEditor(NVDAObject):
 		ui.message(_("Nothing to redo"))
 
 	def script_ccBackspace(self, gesture):
+		_live_baseline(self)
 		if _conf()["autoClose"] and _writable_notepad(self):
 			try:
 				if _delete_auto_pair(self):
@@ -1643,6 +1656,31 @@ class CodeEditor(NVDAObject):
 			except Exception:
 				log.debugWarning("Code Compass: backspace failed", exc_info=True)
 		self.script_caret_backspaceCharacter(gesture)
+		_schedule_live_check(self)
+
+	# Deleting and pasting change the text without a typed character: check
+	# for new problems after them too. NVDA's own behaviour is kept.
+
+	def script_ccDelete(self, gesture):
+		_live_baseline(self)
+		self.script_caret_deleteCharacter(gesture)
+		_schedule_live_check(self)
+
+	def script_ccBackspaceWord(self, gesture):
+		_live_baseline(self)
+		self.script_caret_backspaceWord(gesture)
+		_schedule_live_check(self)
+
+	def script_ccDeleteWord(self, gesture):
+		_live_baseline(self)
+		self.script_caret_deleteWord(gesture)
+		_schedule_live_check(self)
+
+	def script_ccPasteOrCut(self, gesture):
+		_live_baseline(self)
+		gesture.send()
+		_schedule_live_check(self)
+		_schedule_undo_stop(self)
 
 	def script_ccSave(self, gesture):
 		_before_save(self)
@@ -1665,6 +1703,15 @@ class CodeEditor(NVDAObject):
 		"kb:alt+end": "ccBlockEnd",
 		"kb:control+s": "ccSave",
 		"kb:backspace": "ccBackspace",
+		"kb:delete": "ccDelete",
+		"kb:numpadDelete": "ccDelete",
+		"kb:control+backspace": "ccBackspaceWord",
+		"kb:control+delete": "ccDeleteWord",
+		"kb:control+numpadDelete": "ccDeleteWord",
+		"kb:control+v": "ccPasteOrCut",
+		"kb:control+x": "ccPasteOrCut",
+		"kb:shift+insert": "ccPasteOrCut",
+		"kb:shift+delete": "ccPasteOrCut",
 		"kb:control+z": "ccUndo",
 		"kb:control+y": "ccRedo",
 		"kb:control+shift+z": "ccRedo",

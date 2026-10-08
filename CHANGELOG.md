@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 0.4.2
+
+### 🛠️ Fixed
+
+- Removing a line's indentation in Python so that `return` or `break` ends up outside its function or loop is now a problem: Python code is compiled (still without running anything), not only parsed.
+- The check for new problems also runs after deleting (Delete, Backspace, control+Backspace, control+Delete), cutting and pasting, and after Code Compass's own commands such as shift+Tab or moving lines, not only after typing a character.
+
 ## Version 0.4.1
 
 ### 🎉 New
