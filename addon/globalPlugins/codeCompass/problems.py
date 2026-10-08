@@ -35,15 +35,17 @@ class Problem(object):
 
 
 def python_problems(text):
-	"""The first syntax error, found by parsing only: nothing is run.
-	NVDA's own Python parses the code, so very new or very old syntax may be
+	"""The first syntax error, found by compiling only: nothing is run.
+	Compiling (not just parsing) also finds "return" outside a function and
+	"break" outside a loop, as after removing a line's indentation. NVDA's
+	own Python compiles the code, so very new or very old syntax may be
 	judged by NVDA's Python version."""
 	source = text.replace("\r\n", "\n").replace("\r", "\n")
 	try:
 		with warnings.catch_warnings():
 			# Invalid escape sequences and similar only warn; keep them quiet.
 			warnings.simplefilter("ignore")
-			compile(source, "<code>", "exec", ast.PyCF_ONLY_AST, dont_inherit=True)
+			compile(source, "<code>", "exec", dont_inherit=True)
 	except SyntaxError as e:
 		line = max(0, (e.lineno or 1) - 1)
 		column = max(0, (e.offset or 1) - 1)

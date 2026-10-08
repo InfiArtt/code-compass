@@ -77,7 +77,7 @@ When you come back to Notepad and another program (an editor, a code generator, 
 
 Code Compass finds problems without running anything: syntax errors in Python (checked by NVDA's own Python) and JSON files, and unclosed or extra brackets in every language. After a program run (see below), the error it stopped on is a problem too.
 
-- While you type: about a second after you stop, Code Compass checks again, and a problem your typing just made (an unclosed bracket, a Python syntax error) plays the error sound right away. The settings can also have it read, or turn this off. Plain text files are not checked while typing.
+- While you type: about a second after you stop typing, deleting, pasting or using a command such as shift+Tab, Code Compass checks again, and a problem that change just made (an unclosed bracket, a Python syntax error) plays the error sound right away. The settings can also have it read, or turn this off. Plain text files are not checked while typing.
 - F8 and shift+F8: next and previous problem. The problem is read, then its line.
 - control+shift+M: a list of every problem; Enter moves there.
 - control+S saves as usual, then reports problems, or says "Saved, no problems".
@@ -177,5 +177,5 @@ NVDA menu, Preferences, Settings, Code Compass:
 - VS Code only exposes part of a file to screen readers, so levels there can be wrong. VS Code is not enabled by default.
 - The outline and function moves find declarations with patterns, not a full parser. Unusual code styles may be missed.
 - Undo steps are kept while NVDA runs: after restarting NVDA, or with the setting turned off, control+Z is Notepad's own single step again.
-- Python syntax errors come from Python's own parser, which reports only the first one in a file.
+- Python syntax errors come from Python's own compiler (nothing is run), which reports only the first one in a file. A line moved out of a block on purpose is valid Python, so it is no problem; you hear it as a change of the level tone.
 - Code inside strings is understood for Python f-strings, JavaScript template literals and Swift's \\( ). In other languages' interpolated strings, such as C#'s `$"{name}"` or Kotlin's and Dart's `"${name}"`, the name is text: rename, uses and completion skip it there.

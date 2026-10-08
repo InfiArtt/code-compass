@@ -77,7 +77,7 @@ Waktu kamu balik ke Notepad dan file yang kebuka udah diubah program lain (edito
 
 Code Compass nemuin masalah tanpa ngejalanin kodenya: error sintaks di file Python (dicek pakai Python bawaan NVDA) dan JSON, plus kurung yang belum ketutup atau berlebih di semua bahasa. Sesudah program dijalanin (lihat di bawah), error tempat program berhenti juga ikut jadi masalah.
 
-- Waktu ngetik: sekitar satu detik setelah kamu berhenti, Code Compass ngecek lagi. Masalah yang baru aja muncul gara-gara ketikanmu (kurung belum ketutup, error sintaks Python) langsung dibunyiin pakai suara error. Di pengaturan, masalahnya bisa sekalian dibacain, atau fitur ini dimatiin. File teks biasa nggak dicek waktu ngetik.
+- Waktu ngetik: sekitar satu detik setelah kamu berhenti ngetik, ngapus, nempel (paste), atau make perintah kayak shift+Tab, Code Compass ngecek lagi. Masalah yang baru aja muncul gara-gara perubahan itu (kurung belum ketutup, error sintaks Python) langsung dibunyiin pakai suara error. Di pengaturan, masalahnya bisa sekalian dibacain, atau fitur ini dimatiin. File teks biasa nggak dicek waktu ngetik.
 - F8 dan shift+F8: masalah berikutnya dan sebelumnya. Masalahnya dibacain dulu, baru barisnya.
 - control+shift+M: daftar semua masalah, Enter buat lompat ke sana.
 - control+S nyimpen kayak biasa, terus ngelaporin masalah, atau bilang "Tersimpan, tidak ada masalah".
@@ -177,5 +177,5 @@ Menu NVDA, Preferences, Settings, Code Compass:
 - VS Code cuma ngasih sebagian isi file ke screen reader, jadi levelnya bisa salah di sana. VS Code nggak aktif secara default.
 - Outline dan lompat per fungsi nyari deklarasi pakai pola, bukan parser lengkap. Gaya penulisan kode yang nggak biasa bisa kelewat.
 - Langkah undo disimpan selama NVDA jalan: habis NVDA di-restart, atau kalau pengaturannya dimatiin, control+Z balik jadi undo bawaan Notepad yang cuma satu langkah.
-- Error sintaks Python dicek pakai parser Python sendiri, yang cuma ngelaporin error pertama di satu file.
+- Error sintaks Python dicek pakai compiler Python sendiri (kodenya nggak dijalanin), yang cuma ngelaporin error pertama di satu file. Baris yang memang sengaja dikeluarin dari blok itu Python yang sah, jadi nggak dihitung masalah; kamu dengernya sebagai perubahan nada level.
 - Kode di dalam string dikenali buat f-string Python, template literal JavaScript, dan \\( ) di Swift. Di string interpolasi bahasa lain, misalnya `$"{name}"` di C# atau `"${name}"` di Kotlin dan Dart, namanya dianggap teks: rename, daftar pemakaian, dan autocomplete ngelewatin nama di situ.
