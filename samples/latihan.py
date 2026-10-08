@@ -1,4 +1,5 @@
 # Latihan Code Compass. Buka di Notepad, lalu coba hal-hal di bawah ini.
+# (Versi bahasa Inggris: practice.py.)
 #
 # Ctrl+Shift+Space (petunjuk parameter): taruh kursor di dalam kurung
 #   pemanggilan fungsi, misalnya di "15000" atau "diskon=10" pada baris
