@@ -1,0 +1,818 @@
+# Indonesian translation for Code Compass.
+msgid ""
+msgstr ""
+"Project-Id-Version: codeCompass\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Code Compass"
+msgstr "Code Compass"
+
+msgid "top level"
+msgstr "level paling luar"
+
+msgid "under 0.1 seconds"
+msgstr "kurang dari 0,1 detik"
+
+msgid "."
+msgstr ","
+
+msgid "1 line"
+msgstr "1 baris"
+
+msgid "only spacing changed"
+msgstr "cuma spasi yang berubah"
+
+msgid "\nThe program finished (exit code {status}). Press Enter to close this window."
+msgstr "\nProgram selesai (kode keluar {status}). Tekan Enter untuk menutup jendela ini."
+
+msgid "Off"
+msgstr "Mati"
+
+msgid "Tone"
+msgstr "Nada"
+
+msgid "Speech"
+msgstr "Ucapan"
+
+msgid "Tone and speech"
+msgstr "Nada dan ucapan"
+
+msgid "VS Code sounds"
+msgstr "Suara VS Code"
+
+msgid "Beeps"
+msgstr "Bip"
+
+msgid "Play a sound for new problems"
+msgstr "Bunyikan suara untuk masalah baru"
+
+msgid "Play a sound and say new problems"
+msgstr "Bunyikan suara dan bacakan masalah baru"
+
+msgid "Same as NVDA"
+msgstr "Ikut NVDA"
+
+msgid "line {line}"
+msgstr "baris {line}"
+
+msgid "in {kind} {name}"
+msgstr "di {kind} {name}"
+
+msgid "line {line}: {message}"
+msgstr "baris {line}: {message}"
+
+msgid "{count} problems: {list}"
+msgstr "{count} masalah: {list}"
+
+msgid "Saved, no problems"
+msgstr "Tersimpan, tidak ada masalah"
+
+msgid "&Declarations:"
+msgstr "&Deklarasi:"
+
+msgid "&Snippets:"
+msgstr "&Snippet:"
+
+msgid "&Preview:"
+msgstr "&Pratinjau:"
+
+msgid "&Insert"
+msgstr "S&isipkan"
+
+msgid "Delete snippet"
+msgstr "Hapus snippet"
+
+msgid "Removed"
+msgstr "Dihapus"
+
+msgid "&Search commands:"
+msgstr "&Cari perintah:"
+
+msgid "&Commands:"
+msgstr "&Perintah:"
+
+msgid "&Files and folders:"
+msgstr "&File dan folder:"
+
+msgid "&Open"
+msgstr "&Buka"
+
+msgid "Close"
+msgstr "Tutup"
+
+msgid "New file"
+msgstr "File baru"
+
+msgid "New folder"
+msgstr "Folder baru"
+
+msgid "Rename"
+msgstr "Ganti nama"
+
+msgid "Choose a folder to explore"
+msgstr "Pilih folder untuk dijelajahi"
+
+msgid "Save the file first"
+msgstr "Simpan filenya dulu"
+
+msgid "Code Compass commands: press a letter next, H lists them"
+msgstr "Perintah Code Compass: tekan satu huruf sesudahnya, H untuk daftar perintah"
+
+msgid "Not in a text editor"
+msgstr "Bukan di editor teks"
+
+msgid "Reports the scopes around the caret, outermost first"
+msgstr "Membacakan blok-blok di sekitar kursor, dari yang paling luar"
+
+msgid "Shows the scopes around the caret, with line numbers, in a reviewable window"
+msgstr "Menampilkan blok-blok di sekitar kursor beserta nomor barisnya di jendela yang bisa ditelusuri"
+
+msgid "Reports the bracket level at the caret and which brackets are open"
+msgstr "Membacakan level kurung di kursor dan kurung apa saja yang masih terbuka"
+
+msgid "Moves to the bracket matching the one at or just before the caret"
+msgstr "Pindah ke pasangan kurung yang ada di kursor atau tepat sebelum kursor"
+
+msgid "Moves to the start of the block around the caret; repeat to go outward"
+msgstr "Pindah ke awal blok di sekitar kursor; ulangi untuk naik ke blok luarnya"
+
+msgid "Moves to the end of the block around the caret; repeat to go outward"
+msgstr "Pindah ke akhir blok di sekitar kursor; ulangi untuk naik ke blok luarnya"
+
+msgid "Moves to the next line at the same level, skipping nested blocks"
+msgstr "Pindah ke baris berikutnya yang levelnya sama, melewati blok di dalamnya"
+
+msgid "Moves to the previous line at the same level, skipping nested blocks"
+msgstr "Pindah ke baris sebelumnya yang levelnya sama, melewati blok di dalamnya"
+
+msgid "Moves to the next function or class"
+msgstr "Pindah ke fungsi atau class berikutnya"
+
+msgid "Moves to the previous function or class"
+msgstr "Pindah ke fungsi atau class sebelumnya"
+
+msgid "No block to select"
+msgstr "Tidak ada blok untuk dipilih"
+
+msgid "Selects the whole lines of the block around the caret; repeat to select the next block out"
+msgstr "Memilih seluruh baris blok di sekitar kursor; ulangi untuk memilih blok luarnya"
+
+msgid ", top level"
+msgstr ", di level paling luar"
+
+msgid "Reports the function or class at the caret, what it is inside, and what it contains"
+msgstr "Membacakan fungsi atau class di kursor, ada di dalam apa, dan isinya apa saja"
+
+msgid "Moves to the function or class around the caret, or to its parent when already on it"
+msgstr "Pindah ke fungsi atau class di sekitar kursor, atau ke induknya kalau sudah di situ"
+
+msgid "Moves to the first function or class inside the one at the caret"
+msgstr "Pindah ke fungsi atau class pertama di dalam yang ada di kursor"
+
+msgid "Shows functions and classes as a tree; Enter moves to the selected one"
+msgstr "Menampilkan fungsi dan class sebagai tree; Enter untuk pindah ke yang dipilih"
+
+msgid "Saves the selected code as a snippet, or the function or class at the caret when nothing is selected"
+msgstr "Menyimpan kode yang dipilih sebagai snippet, atau fungsi atau class di kursor kalau tidak ada yang dipilih"
+
+msgid "Lists saved snippets; Enter inserts the selected one at the caret"
+msgstr "Daftar snippet tersimpan; Enter untuk menyisipkan yang dipilih di kursor"
+
+msgid "Checks the whole file for unclosed or extra brackets"
+msgstr "Memeriksa seluruh file, apakah ada kurung yang belum ditutup atau berlebih"
+
+msgid "Cycles how the bracket level is reported when moving by line: off, tone, speech, both"
+msgstr "Mengganti cara level kurung dilaporkan saat pindah baris: mati, nada, ucapan, keduanya"
+
+msgid "Comments or uncomments the selected lines, or the caret's line"
+msgstr "Mengomentari atau membatalkan komentar baris yang dipilih, atau baris kursor"
+
+msgid "Completes the word at the caret with names from the file; press again for the next suggestion"
+msgstr "Melengkapi kata di kursor dengan nama dari file ini; tekan lagi untuk saran berikutnya"
+
+msgid "Reports the parameters of the function whose parentheses hold the caret"
+msgstr "Membacakan parameter fungsi yang kurungnya berisi kursor"
+
+msgid "Deleted"
+msgstr "Dihapus"
+
+msgid "Deletes the selected lines, or the caret's line"
+msgstr "Menghapus baris yang dipilih, atau baris kursor"
+
+msgid "Moves the selected lines, or the caret's line, up"
+msgstr "Memindahkan baris yang dipilih, atau baris kursor, ke atas"
+
+msgid "Moves the selected lines, or the caret's line, down"
+msgstr "Memindahkan baris yang dipilih, atau baris kursor, ke bawah"
+
+msgid "Duplicated"
+msgstr "Diduplikat"
+
+msgid "Copies the selected lines, or the caret's line, below themselves"
+msgstr "Menyalin baris yang dipilih, atau baris kursor, ke bawahnya"
+
+msgid "Moves to the declaration of the function or class named at the caret"
+msgstr "Pindah ke deklarasi fungsi atau class yang namanya ada di kursor"
+
+msgid "Lists every line that uses the name at the caret; Enter moves there"
+msgstr "Daftar semua baris yang memakai nama di kursor; Enter untuk pindah ke sana"
+
+msgid "Renames the name at the caret everywhere in the file, outside comments and strings"
+msgstr "Mengganti nama di kursor di seluruh file, kecuali di komentar dan string"
+
+msgid "Moves to the next problem: a syntax error, an unbalanced bracket or the last run's error"
+msgstr "Pindah ke masalah berikutnya: error sintaks, kurung tidak seimbang, atau error saat terakhir dijalankan"
+
+msgid "Moves to the previous problem"
+msgstr "Pindah ke masalah sebelumnya"
+
+msgid "Lists every problem in the file; Enter moves there"
+msgstr "Daftar semua masalah di file ini; Enter untuk pindah ke sana"
+
+msgid "Reloads the file from disk, after asking when it has unsaved changes"
+msgstr "Memuat ulang file dari disk, dengan bertanya dulu kalau ada perubahan yang belum disimpan"
+
+msgid "Adds a bookmark on the caret's line, or removes the one there"
+msgstr "Menambahkan bookmark di baris kursor, atau menghapus bookmark yang ada di sana"
+
+msgid "Goes back to where the caret was before the last jump"
+msgstr "Kembali ke posisi kursor sebelum lompatan terakhir"
+
+msgid "Goes forward again after going back"
+msgstr "Maju lagi setelah kembali"
+
+msgid "Moves to the next bookmark"
+msgstr "Pindah ke bookmark berikutnya"
+
+msgid "Moves to the previous bookmark"
+msgstr "Pindah ke bookmark sebelumnya"
+
+msgid "Lists the bookmarks in the file; Enter moves there, Delete removes one"
+msgstr "Daftar bookmark di file ini; Enter untuk pindah ke sana, Delete untuk menghapus"
+
+msgid "Removes every bookmark in the file"
+msgstr "Menghapus semua bookmark di file ini"
+
+msgid "Lists TODO, FIXME and similar notes in comments; Enter moves there"
+msgstr "Daftar catatan TODO, FIXME, dan sejenisnya di komentar; Enter untuk pindah ke sana"
+
+msgid "Saves and runs the Python file in a console window; F8 then goes to the error it stopped on"
+msgstr "Menyimpan dan menjalankan file Python di jendela console; lalu F8 pindah ke error tempat program berhenti"
+
+msgid "Opens a Command Prompt in the file's folder"
+msgstr "Membuka Command Prompt di folder file ini"
+
+msgid "Shows the project's files and folders as a tree; Enter opens a file"
+msgstr "Menampilkan file dan folder proyek sebagai tree; Enter untuk membuka file"
+
+msgid "Lists every Code Compass command with its keys; type to filter, Enter runs one"
+msgstr "Daftar semua perintah Code Compass beserta tombolnya; ketik untuk menyaring, Enter untuk menjalankan"
+
+msgid "After NVDA+shift+K: W where am I, shift+W details, F function family, D level, M matching bracket, B block start, E block end, S select block, N next function, P previous function, O outline, shift+E explorer, A save snippet, I insert snippet, C check brackets, shift+C problems, shift+T TODO notes, shift+B bookmarks, backspace back to where you were, shift+backspace forward again, R reload from disk, shift+P all commands, T level report mode. In Notepad, control+shift+P lists every command and its keys."
+msgstr "Setelah NVDA+shift+K: W aku di mana, shift+W detail, F silsilah fungsi, D level, M pasangan kurung, B awal blok, E akhir blok, S pilih blok, N fungsi berikutnya, P fungsi sebelumnya, O outline, shift+E explorer, A simpan snippet, I sisipkan snippet, C cek kurung, shift+C daftar masalah, shift+T catatan TODO, shift+B daftar bookmark, backspace balik ke tempat sebelumnya, shift+backspace maju lagi, R muat ulang dari disk, shift+P semua perintah, T mode laporan level. Di Notepad, control+shift+P menampilkan semua perintah dan tombolnya."
+
+msgid "Lists the Code Compass commands"
+msgstr "Membacakan daftar perintah Code Compass"
+
+msgid "Report bracket &level when moving by line:"
+msgstr "Laporan &level kurung saat pindah baris:"
+
+msgid "Sound styl&e:"
+msgstr "&Gaya suara:"
+
+msgid "E&xamine code while typing:"
+msgstr "Pe&riksa kode saat mengetik:"
+
+msgid "Tone pitc&h for level 1 (Hz):"
+msgstr "Tinggi nada level &1 (Hz):"
+
+msgid "Semi&tones higher per level:"
+msgstr "&Semitone naik per level:"
+
+msgid "Applications with level tones and quick keys (co&mma separated):"
+msgstr "Aplikasi dengan nada level dan tombol cepat (pisahkan &dengan koma):"
+
+msgid "Lan&guage of Code Compass messages:"
+msgstr "Bahasa p&esan Code Compass:"
+
+msgid "{seconds} seconds"
+msgstr "{seconds} detik"
+
+msgid "1 minute"
+msgstr "1 menit"
+
+msgid "1 second"
+msgstr "1 detik"
+
+msgid "{count} lines"
+msgstr "{count} baris"
+
+msgid "line {line}, warning: {message}"
+msgstr "baris {line}, peringatan: {message}"
+
+msgid "1 problem: {list}"
+msgstr "1 masalah: {list}"
+
+msgid "1 line changed"
+msgstr "1 baris berubah"
+
+msgid "1 line added"
+msgstr "1 baris ditambah"
+
+msgid "1 line removed"
+msgstr "1 baris dihapus"
+
+msgid "Code outline"
+msgstr "Outline kode"
+
+msgid "Snippets"
+msgstr "Snippet"
+
+msgid "De&lete"
+msgstr "&Hapus"
+
+msgid "Open snippets &folder"
+msgstr "Buka &folder snippet"
+
+msgid "Code Compass commands"
+msgstr "Perintah Code Compass"
+
+msgid "New fi&le"
+msgstr "File bar&u"
+
+msgid "New fol&der"
+msgstr "F&older baru"
+
+msgid "&Rename"
+msgstr "&Ganti nama"
+
+msgid "Dele&te"
+msgstr "&Hapus"
+
+msgid "Copy &path"
+msgstr "Salin pa&th"
+
+msgid "&Up one folder"
+msgstr "&Naik satu folder"
+
+msgid "&Choose folder..."
+msgstr "P&ilih folder..."
+
+msgid "Show in &Windows Explorer"
+msgstr "Tampilkan di &Windows Explorer"
+
+msgid "Command pro&mpt here"
+msgstr "Command pro&mpt di sini"
+
+msgid "Explorer: {folder}"
+msgstr "Explorer: {folder}"
+
+msgid "Delete"
+msgstr "Hapus"
+
+msgid "Top of the drive"
+msgstr "Sudah di puncak drive"
+
+msgid "Could not open a command prompt"
+msgstr "Command Prompt tidak bisa dibuka"
+
+msgid "Top level"
+msgstr "Level paling luar"
+
+msgid "Where am I"
+msgstr "Aku di mana"
+
+msgid "No bracket here"
+msgstr "Tidak ada kurung di sini"
+
+msgid "Unmatched bracket"
+msgstr "Kurung tanpa pasangan"
+
+msgid "This block is never closed"
+msgstr "Blok ini tidak pernah ditutup"
+
+msgid "Not inside a function or class"
+msgstr "Tidak di dalam fungsi atau class"
+
+msgid "No functions or classes found"
+msgstr "Tidak ada fungsi atau class"
+
+msgid "No snippets yet. Select code, then press NVDA+shift+K and A to save one"
+msgstr "Belum ada snippet. Pilih kode, lalu tekan NVDA+shift+K dan A untuk menyimpan"
+
+msgid "Could not insert the snippet"
+msgstr "Snippet tidak bisa disisipkan"
+
+msgid "All brackets balanced"
+msgstr "Semua kurung seimbang"
+
+msgid "This command changes text only in Windows 10 Notepad"
+msgstr "Perintah ini hanya mengubah teks di Notepad Windows 10"
+
+msgid "No indentation to remove"
+msgstr "Tidak ada indentasi untuk dikurangi"
+
+msgid "Nothing to comment"
+msgstr "Tidak ada yang bisa dikomentari"
+
+msgid "Cannot move further"
+msgstr "Tidak bisa pindah lagi"
+
+msgid "No name at the caret"
+msgstr "Tidak ada nama di kursor"
+
+msgid "The file changed; rename again"
+msgstr "Filenya berubah; ulangi ganti nama"
+
+msgid "No problems found"
+msgstr "Tidak ada masalah"
+
+msgid "Notepad++ reloads files itself: File, Reload from Disk"
+msgstr "Notepad++ memuat ulang file sendiri: File, Reload from Disk"
+
+msgid "No bookmarks in this file"
+msgstr "Tidak ada bookmark di file ini"
+
+msgid "This is the only bookmark"
+msgstr "Ini satu-satunya bookmark"
+
+msgid "Removed 1 bookmark"
+msgstr "1 bookmark dihapus"
+
+msgid "No TODO notes found"
+msgstr "Tidak ada catatan TODO"
+
+msgid "Running works for Python files"
+msgstr "Menjalankan kode hanya untuk file Python"
+
+msgid "The file is not saved yet"
+msgstr "Filenya belum tersimpan"
+
+msgid "Python was not found. Install it from python.org, then try again"
+msgstr "Python tidak ditemukan. Pasang dari python.org, lalu coba lagi"
+
+msgid "The program stopped on line {line}: {message}. NVDA+shift+K, then shift+C lists it"
+msgstr "Program berhenti di baris {line}: {message}. NVDA+shift+K, lalu shift+C untuk melihatnya"
+
+msgid "The program stopped on line {line}: {message}. Press F8 to go there"
+msgstr "Program berhenti di baris {line}: {message}. Tekan F8 untuk ke sana"
+
+msgid "The program window was closed"
+msgstr "Jendela program ditutup"
+
+msgid "Saved, but: {problems}"
+msgstr "Tersimpan, tapi: {problems}"
+
+msgid "Delete snippet {name}?"
+msgstr "Hapus snippet {name}?"
+
+msgid "A name cannot contain any of these characters: < > : \" / \\ | ? *"
+msgstr "Nama tidak boleh berisi karakter ini: < > : \" / \\ | ? *"
+
+msgid "Name of the new file in {folder}:"
+msgstr "Nama file baru di {folder}:"
+
+msgid "Name of the new folder in {folder}:"
+msgstr "Nama folder baru di {folder}:"
+
+msgid "New name for {name}:"
+msgstr "Nama baru untuk {name}:"
+
+msgid "Move {name} to the Recycle Bin?"
+msgstr "Pindahkan {name} ke Recycle Bin?"
+
+msgid "{name} is on a drive with no Recycle Bin. Delete it permanently? This cannot be undone."
+msgstr "{name} ada di drive tanpa Recycle Bin. Hapus permanen? Ini tidak bisa dibatalkan."
+
+msgid "Line {line}: {text}"
+msgstr "Baris {line}: {text}"
+
+msgid "level {level}: {names}"
+msgstr "level {level}: {names}"
+
+msgid "End of block"
+msgstr "Akhir blok"
+
+msgid "Start of block"
+msgstr "Awal blok"
+
+msgid "No next function or class"
+msgstr "Tidak ada fungsi atau class berikutnya"
+
+msgid "No previous function or class"
+msgstr "Tidak ada fungsi atau class sebelumnya"
+
+msgid ", in {kind} {name}"
+msgstr ", di dalam {kind} {name}"
+
+msgid "Select some code first, or put the caret inside a function or class"
+msgstr "Pilih kode dulu, atau taruh kursor di dalam fungsi atau class"
+
+msgid "Snippet not saved: the name is empty"
+msgstr "Snippet tidak disimpan: namanya kosong"
+
+msgid "Save snippet"
+msgstr "Simpan snippet"
+
+msgid "Level report: {mode}"
+msgstr "Laporan level: {mode}"
+
+msgid "Outdented"
+msgstr "Indentasi dikurangi"
+
+msgid "Indented"
+msgstr "Diindentasi"
+
+msgid "Commented"
+msgstr "Dikomentari"
+
+msgid "Uncommented"
+msgstr "Komentar dibatalkan"
+
+msgid "No suggestions"
+msgstr "Tidak ada saran"
+
+msgid "as typed"
+msgstr "seperti yang diketik"
+
+msgid "Put the caret inside the parentheses of a call"
+msgstr "Taruh kursor di dalam kurung pemanggilan fungsi"
+
+msgid "{signature}, argument {number}"
+msgstr "{signature}, argumen ke-{number}"
+
+msgid "line {line}: {text}"
+msgstr "baris {line}: {text}"
+
+msgid "&Uses:"
+msgstr "&Pemakaian:"
+
+msgid "&Problems:"
+msgstr "&Masalah:"
+
+msgid "Could not find the file on disk"
+msgstr "File-nya tidak ditemukan di disk"
+
+msgid "Reload"
+msgstr "Muat ulang"
+
+msgid "No earlier place to go back to"
+msgstr "Tidak ada posisi sebelumnya untuk dituju"
+
+msgid "No later place to go forward to"
+msgstr "Tidak ada posisi berikutnya untuk dituju"
+
+msgid "back to the top"
+msgstr "balik ke atas"
+
+msgid "back to the bottom"
+msgstr "balik ke bawah"
+
+msgid "&Bookmarks:"
+msgstr "&Bookmark:"
+
+msgid "line {line}, {kind}: {text}"
+msgstr "baris {line}, {kind}: {text}"
+
+msgid "&Notes:"
+msgstr "&Catatan:"
+
+msgid "Running {name}"
+msgstr "Menjalankan {name}"
+
+msgid "&Only report when the level changes"
+msgstr "Hanya laporkan saat level &berubah"
+
+msgid "Shorter tone insi&de parentheses and square brackets"
+msgstr "Nada lebih &pendek di dalam kurung biasa dan kurung siku"
+
+msgid "Sa&y what closing brackets close"
+msgstr "Sebutkan apa yang ditutup oleh kurung &tutup"
+
+msgid "Check for problems &when saving"
+msgstr "Cek masalah saat menyi&mpan"
+
+msgid "Play a sound on lines with a p&roblem"
+msgstr "Bunyikan suara di baris yang ada masala&hnya"
+
+msgid "Play a sound on bookmarked li&nes"
+msgstr "Bu&nyikan nada di baris yang ada bookmark-nya"
+
+msgid "Say the &function or class the caret moves into"
+msgstr "Sebutkan &fungsi atau class yang dimasuki kursor"
+
+msgid "Automatic &indentation on Enter and closing brackets (Windows 10 Notepad)"
+msgstr "&Indentasi otomatis saat Enter dan kurung tutup (Notepad Windows 10)"
+
+msgid "Add closing brackets and &quotes automatically (Windows 10 Notepad)"
+msgstr "Tambahkan kurung tutup dan k&utip otomatis (Notepad Windows 10)"
+
+msgid "level {level}"
+msgstr "level {level}"
+
+msgid "{minutes} minutes"
+msgstr "{minutes} menit"
+
+msgid "{name} is no longer on disk"
+msgstr "{name} sudah tidak ada di disk"
+
+msgid "{name} changed on disk"
+msgstr "{name} berubah di disk"
+
+msgid "{name} changed on disk, and you have unsaved changes. NVDA+shift+K, then R reloads it"
+msgstr "{name} berubah di disk, dan kamu punya perubahan yang belum disimpan. NVDA+shift+K, lalu R untuk memuat ulang"
+
+msgid "Could not reload {name}"
+msgstr "{name} tidak bisa dimuat ulang"
+
+msgid "{name} changed on disk and was reloaded: {changes}"
+msgstr "{name} berubah di disk dan sudah dimuat ulang: {changes}"
+
+msgid "{count} lines changed"
+msgstr "{count} baris berubah"
+
+msgid "{count} lines added"
+msgstr "{count} baris ditambah"
+
+msgid "{count} lines removed"
+msgstr "{count} baris dihapus"
+
+msgid "{name} already exists."
+msgstr "{name} sudah ada."
+
+msgid "{name} was not deleted."
+msgstr "{name} tidak dihapus."
+
+msgid "Copied {path}"
+msgstr "Disalin: {path}"
+
+msgid "Where is {name} saved?"
+msgstr "{name} disimpan di mana?"
+
+msgid "Could not open {name}"
+msgstr "{name} tidak bisa dibuka"
+
+msgid "{kind} {name}"
+msgstr "{kind} {name}"
+
+msgid "Contains {count}: {names}"
+msgstr "Berisi {count}: {names}"
+
+msgid "Nothing declared inside {name}"
+msgstr "Tidak ada fungsi atau class di dalam {name}"
+
+msgid "Snippet saved: {name}"
+msgstr "Snippet tersimpan: {name}"
+
+msgid "Inserted snippet {name}"
+msgstr "Snippet {name} disisipkan"
+
+msgid "Inserted snippet {name}. The clipboard now holds the snippet"
+msgstr "Snippet {name} disisipkan. Clipboard sekarang berisi snippet itu"
+
+msgid "{word}, {index} of {count}"
+msgstr "{word}, {index} dari {count}"
+
+msgid "{name} is not declared in this file"
+msgstr "{name} tidak dideklarasikan di file ini"
+
+msgid "This is where {name} is declared"
+msgstr "Di sinilah {name} dideklarasikan"
+
+msgid "Renamed {count} places to {name}. Control+Z undoes it"
+msgstr "{count} tempat diganti menjadi {name}. Control+Z untuk membatalkan"
+
+msgid "{name} is the same as on disk"
+msgstr "{name} sudah sama dengan yang di disk"
+
+msgid "Reloaded {name}: {changes}"
+msgstr "{name} dimuat ulang: {changes}"
+
+msgid "Bookmark added, line {line}"
+msgstr "Bookmark ditambahkan, baris {line}"
+
+msgid "Bookmark removed, line {line}"
+msgstr "Bookmark dihapus, baris {line}"
+
+msgid "Removed {count} bookmarks"
+msgstr "{count} bookmark dihapus"
+
+msgid "Selected 1 line: {header}"
+msgstr "1 baris dipilih: {header}"
+
+msgid "Selected {count} lines: {header}"
+msgstr "{count} baris dipilih: {header}"
+
+msgid "Name for the {ext} snippet:"
+msgstr "Nama snippet {ext}:"
+
+msgid "Could not read snippet {name}"
+msgstr "Snippet {name} tidak bisa dibaca"
+
+msgid "Outdented {count} lines"
+msgstr "Indentasi {count} baris dikurangi"
+
+msgid "Indented {count} lines"
+msgstr "{count} baris diindentasi"
+
+msgid "{count} lines commented"
+msgstr "{count} baris dikomentari"
+
+msgid "{count} lines uncommented"
+msgstr "Komentar {count} baris dibatalkan"
+
+msgid "{word}, as typed"
+msgstr "{word}, seperti yang diketik"
+
+msgid "Uses of {name}: {count}"
+msgstr "Pemakaian {name}: {count}"
+
+msgid "{name} is not a valid name"
+msgstr "{name} bukan nama yang valid"
+
+msgid "Rename {name} ({count} places) to:"
+msgstr "Ganti nama {name} ({count} tempat) menjadi:"
+
+msgid "Problems: {count}"
+msgstr "Masalah: {count}"
+
+msgid "{name} has changes you have not saved. Reload it from disk anyway? Control+Z undoes the reload."
+msgstr "{name} punya perubahan yang belum disimpan. Tetap muat ulang dari disk? Control+Z membatalkan pemuatan ulang."
+
+msgid "Bookmarks: {count}"
+msgstr "Bookmark: {count}"
+
+msgid "TODO notes: {count}"
+msgstr "Catatan TODO: {count}"
+
+msgid "The program stopped: {message}"
+msgstr "Program berhenti: {message}"
+
+msgid "A snippet named {name} already exists. Replace it?"
+msgstr "Snippet bernama {name} sudah ada. Timpa?"
+
+msgid "The program finished in {time}, exit code {status}"
+msgstr "Program selesai dalam {time}, kode keluar {status}"
+
+msgid "The program finished, exit code {status}"
+msgstr "Program selesai, kode keluar {status}"
+
+msgid "{name} is already open"
+msgstr "{name} sudah terbuka"
+
+msgid "nothing to close"
+msgstr "tidak ada yang ditutup"
+
+msgid "block"
+msgstr "blok"
+
+msgid "closes {what}"
+msgstr "tutup {what}"
+
+msgid "{name}, {kind}, line {line}"
+msgstr "{name}, {kind}, baris {line}"
+
+msgid "closes {what}, but {name} from line {line} is still open"
+msgstr "tutup {what}, tapi {name} dari baris {line} masih terbuka"
+
+msgid "{name}, {kind} in {parent}, line {line}"
+msgstr "{name}, {kind} di {parent}, baris {line}"
+
+msgid "unclosed {name} on line {line}: {text}"
+msgstr "{name} belum ditutup di baris {line}: {text}"
+
+msgid "extra closing {name} on line {line}: {text}"
+msgstr "{name} tutup berlebih di baris {line}: {text}"
+
+msgid "{name} is declared again; the one on line {line} no longer counts"
+msgstr "{name} dideklarasikan lagi; yang di baris {line} jadi tidak berlaku"
+
+msgid "tabs and spaces mixed in the indentation"
+msgstr "tab dan spasi bercampur di indentasi"
+
+msgid "indented with spaces, the rest of the file uses tabs"
+msgstr "indentasi pakai spasi, bagian lain file pakai tab"
+
+msgid "indented with tabs, the rest of the file uses spaces"
+msgstr "indentasi pakai tab, bagian lain file pakai spasi"
+
+msgid "{name} is declared inside {name}, a function with the same name"
+msgstr "{name} dideklarasikan di dalam {name}, fungsi yang namanya sama"
+
+msgid "brace"
+msgstr "kurung kurawal"
+
+msgid "paren"
+msgstr "kurung biasa"
+
+msgid "bracket"
+msgstr "kurung siku"
+
+msgid "function"
+msgstr "fungsi"
+
+msgid "class"
+msgstr "class"

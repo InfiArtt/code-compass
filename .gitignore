@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Build output: build.py writes these from sources in the repository
+*.nvda-addon
+addon/manifest.ini
+addon/doc/*/*.html
+*.mo
+*.pot
+
+# Secrets and local settings: never commit these
+.env
+.env.*
+*.pem
+*.key
+
+# Editors and operating systems
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini

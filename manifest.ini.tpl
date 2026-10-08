@@ -1,0 +1,13 @@
+name = {addon_name}
+summary = "{addon_summary}"
+description = """{addon_description}"""
+author = "{addon_author}"
+version = {addon_version}
+{addon_sourceURLComment}sourceURL = {addon_sourceURL}
+docFileName = {addon_docFileName}
+{addon_urlComment}url = {addon_url}
+minimumNVDAVersion = {addon_minimumNVDAVersion}
+lastTestedNVDAVersion = {addon_lastTestedNVDAVersion}
+{addon_updateChannelComment}updateChannel = {addon_updateChannel}
+{addon_licenseComment}license = {addon_license}
+{addon_licenseURLComment}licenseURL = {addon_licenseURL}

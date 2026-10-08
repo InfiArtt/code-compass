@@ -1,0 +1,5 @@
+# Normalize line endings in the repository, whatever core.autocrlf says.
+* text=auto
+
+# Sounds and other binary files: never touch their bytes.
+*.wav binary
