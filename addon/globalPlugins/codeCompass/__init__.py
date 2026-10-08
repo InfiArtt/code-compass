@@ -40,7 +40,7 @@ from NVDAObjects import NVDAObject
 from scriptHandler import isScriptWaiting, script
 from textInfos.offsets import Offsets, OffsetsTextInfo
 
-from . import analyzer, bookmarks, edit_control, editing, filepath, problems, programs, snippets
+from . import analyzer, bookmarks, edit_control, editing, filepath, problems, programs, snippets, undo
 
 addonHandler.initTranslation()
 #: Translator for NVDA's language, installed by initTranslation.
@@ -60,6 +60,7 @@ confspec = {
 	"bookmarkSound": "boolean(default=True)",
 	"soundStyle": "option('vscode', 'beeps', default='vscode')",
 	"liveCheck": "option('off', 'sound', 'speech', default='sound')",
+	"multiUndo": "boolean(default=True)",
 	"announceDeclarations": "boolean(default=True)",
 	"autoClose": "boolean(default=False)",
 	"basePitch": "integer(default=330, min=100, max=2000)",
@@ -698,7 +699,7 @@ def _after_typed_character(obj, ch):
 		if editing.stale_apostrophe(a, caret, ch):
 			# "'a " (a lifetime) cannot be a character literal: the apostrophe
 			# auto-close added after it goes.
-			if not _apply_edit(obj, a, caret, caret + 1, "", caret):
+			if not _apply_edit(obj, a, caret, caret + 1, "", caret, typing=True):
 				return
 			pending[:] = [p for p in pending if p[1] != lineEnd - caret]
 			a = _cache.get(obj)
@@ -706,13 +707,13 @@ def _after_typed_character(obj, ch):
 		mine = (li, lineEnd - caret, ch)
 		if a.text[caret:caret + 1] == ch and (mine in pending or editing.autoclose_skip(a, caret, ch)):
 			# Typing over the closing character auto-close added.
-			if not _apply_edit(obj, a, caret, caret + 1, "", caret):
+			if not _apply_edit(obj, a, caret, caret + 1, "", caret, typing=True):
 				return
 			if mine in pending:
 				pending.remove(mine)
 			a = _cache.get(obj)
 		elif editing.should_autoclose(a, caret, ch):
-			if _apply_edit(obj, a, caret, caret, editing.AUTO_PAIRS[ch], caret):
+			if _apply_edit(obj, a, caret, caret, editing.AUTO_PAIRS[ch], caret, typing=True):
 				pending.append((li, lineEnd + 1 - caret, editing.AUTO_PAIRS[ch]))
 			return
 	if ch not in analyzer.CLOSERS:
@@ -722,7 +723,7 @@ def _after_typed_character(obj, ch):
 		if change:
 			start, end, indent = change
 			newCaret = start + len(indent) + (caret - end)
-			if _apply_edit(obj, a, start, end, indent, newCaret):
+			if _apply_edit(obj, a, start, end, indent, newCaret, typing=True):
 				a = _cache.get(obj)
 				off = newCaret - 1
 	if c["announceClosers"]:
@@ -733,6 +734,115 @@ def _after_typed_character(obj, ch):
 
 #: Window handle -> characters auto-close added and not typed over yet.
 _autoClosed = {}
+
+
+# --- Undo and redo ----------------------------------------------------------------
+
+#: Window handle -> {"title", "history"}: the shown document's undo steps.
+_undoHistories = {}
+#: Window handle -> number of the latest scheduled typing stop.
+_undoStops = {}
+#: A pause in typing this long ends an undo step.
+UNDO_PAUSE_MS = 1000
+
+
+def _undo_enabled(obj):
+	return _conf()["multiUndo"] and _writable_notepad(obj)
+
+
+def _undo_key(obj):
+	"""(window, title) of the document obj shows: Notepad's own top-level
+	window and title, not whatever window is in front (a Find dialog, or
+	another program after alt+tab), and the same when Word Wrap replaces
+	the edit control."""
+	hwnd = getattr(obj, "windowHandle", None)
+	root, title = edit_control.top_window(hwnd)
+	if root is None or title is None:
+		root, title = hwnd, _window_title(obj)
+	return root, title.lstrip("*")
+
+
+def _undo_history(obj, text):
+	"""The undo history of the document obj shows, started on text when new.
+	Another document in the window (a new title that is not this one saved
+	under a new name) starts a new history."""
+	root, title = _undo_key(obj)
+	entry = _undoHistories.get(root)
+	if entry is not None and entry["title"] != title:
+		snapshot = _saveSnapshots.get(getattr(obj, "windowHandle", None))
+		if (
+			snapshot is not None and snapshot[0] == entry["title"]
+			and snapshot[1] == entry["history"].base and snapshot[1] == text
+		):
+			# Saved under a new name: the same document, the same text.
+			entry["title"] = title
+		else:
+			entry = None
+	if entry is None:
+		entry = _undoHistories[root] = {"title": title, "history": undo.History(text)}
+	return entry["history"]
+
+
+def _undo_replaced(obj, history, text):
+	"""True (and the history starts again on text) when the document was
+	replaced: changed, yet Notepad calls it unchanged, as after File > Open
+	or File > New. Undoing into it would bring back the other text."""
+	if text != history.base and edit_control.is_modified(obj.windowHandle) is False:
+		history.reset(text)
+		return True
+	return False
+
+
+def _undo_record(obj, text=None):
+	"""An undo stop: note the document's text as one step."""
+	try:
+		if not _undo_enabled(obj):
+			return
+		if text is None:
+			text = _cache.get(obj).text
+		history = _undo_history(obj, text)
+		if not _undo_replaced(obj, history, text):
+			history.record(text)
+	except Exception:
+		log.debugWarning("Code Compass: recording an undo step failed", exc_info=True)
+
+
+def _schedule_undo_stop(obj):
+	if not _conf()["multiUndo"]:
+		return
+	hwnd = getattr(obj, "windowHandle", None)
+	token = _undoStops[hwnd] = _undoStops.get(hwnd, 0) + 1
+	core.callLater(UNDO_PAUSE_MS, _undo_pause, obj, token)
+
+
+def _undo_pause(obj, token):
+	if _undoStops.get(getattr(obj, "windowHandle", None)) == token:
+		_undo_record(obj)
+
+
+def _undo_redo(obj, redo):
+	"""Undo or redo one step in obj. False when there was nothing to do."""
+	a = _cache.get(obj)
+	history = _undo_history(obj, a.text)
+	if _undo_replaced(obj, history, a.text):
+		return False
+	change = history.redo(a.text) if redo else history.undo(a.text)
+	if change is None:
+		return False
+	start, end, replacement = change
+	if not _apply_edit(obj, a, start, end, replacement, start + len(replacement), typing=True):
+		# Notepad refused the change: the history no longer matches it.
+		history.reset(_cache.get(obj).text)
+		return True
+	state = _disk.get(getattr(obj, "windowHandle", None))
+	if state and state.get("text") is not None and filepath.same_text(history.base, state["text"]):
+		# Back to the text on disk: no "*" in the title.
+		try:
+			edit_control.mark_unmodified(obj.windowHandle)
+		except Exception:
+			pass
+	_speak_caret_line(obj)
+	return True
 
 
 def _delete_auto_pair(obj):
@@ -753,7 +863,7 @@ def _delete_auto_pair(obj):
 	pending = _autoClosed.get(hwnd, [])
 	if entry not in pending:
 		return False
-	if not _apply_edit(obj, a, caret - 1, caret + 1, "", caret - 1):
+	if not _apply_edit(obj, a, caret - 1, caret + 1, "", caret - 1, typing=True):
 		return False
 	pending.remove(entry)
 	speech.speakSpelling(ch)
@@ -871,6 +981,7 @@ def _before_save(obj):
 		hwnd = getattr(obj, "windowHandle", None)
 		shown = _window_title(obj)
 		_saveSnapshots[hwnd] = (shown.lstrip("*"), a.text, shown)
+		_undo_record(obj, a.text)
 		# Bookmarks match against this very text.
 		_bookmarks_for(obj, a)
 		_history_for(obj)
@@ -907,6 +1018,7 @@ def _after_save(obj, viaDialog=False):
 		_check_after_save(obj)
 	else:
 		_play("save")
+	_saveSnapshots.pop(hwnd, None)
 
 
 def _check_after_save(obj):
@@ -1229,10 +1341,14 @@ def _live_check(obj, token):
 # --- Editing Notepad ----------------------------------------------------------------
 
 
-def _apply_edit(obj, a, start, end, newText, selStart=None, selEnd=None, timeout=None):
+def _apply_edit(obj, a, start, end, newText, selStart=None, selEnd=None, timeout=None, typing=False):
 	"""Replace a.text[start:end] with newText in a writable Win32 edit
 	control, then select selStart..selEnd (offsets in the new text). One
-	step for control+Z. True on success."""
+	step for control+Z. True on success. A command's edit is an undo step
+	of its own; with typing (auto-close, indentation while typing), it
+	joins the typing around it."""
+	if not typing:
+		_undo_record(obj, a.text)
 	try:
 		extra = {"timeout": timeout} if timeout else {}
 		ok = edit_control.replace(obj.windowHandle, a.text, start, end, newText, selStart, selEnd, **extra)
@@ -1241,6 +1357,8 @@ def _apply_edit(obj, a, start, end, newText, selStart=None, selEnd=None, timeout
 		ok = False
 	if ok:
 		_forget_selection_change(obj)
+		if not typing:
+			_undo_record(obj, a.text[:start] + newText + a.text[end:])
 	return ok
 
 
@@ -1299,6 +1417,9 @@ class CodeEditor(NVDAObject):
 
 	def _caretScriptPostMovedHelper(self, speakUnit, gesture, info=None):
 		_autoClosed.pop(getattr(self, "windowHandle", None), None)
+		if speakUnit == textInfos.UNIT_LINE:
+			# Moving to another line ends a run of typing, as in VS Code.
+			_undo_record(self)
 		after = []
 		if speakUnit == textInfos.UNIT_LINE and not isScriptWaiting():
 			after = self._codeCompassLineReports(info)
@@ -1310,6 +1431,7 @@ class CodeEditor(NVDAObject):
 	def event_typedCharacter(self, ch):
 		super(CodeEditor, self).event_typedCharacter(ch)
 		_schedule_live_check(self)
+		_schedule_undo_stop(self)
 		c = _conf()
 		if ch in analyzer.CLOSERS or (c["autoClose"] and ch in editing.AUTO_PAIRS):
 			# Let the editor insert the character first.
@@ -1332,7 +1454,7 @@ class CodeEditor(NVDAObject):
 		# does on Enter when "Speak typed words" is on.
 		speech.speakTypedCharacters("\r")
 		selStart = start + caretIn if caretIn is not None else None
-		if not _apply_edit(self, a, start, end, text, selStart):
+		if not _apply_edit(self, a, start, end, text, selStart, typing=True):
 			return self.script_caret_newLine(gesture)
 		_speak_caret_line(self, gesture)
 
@@ -1462,6 +1584,9 @@ class CodeEditor(NVDAObject):
 	def event_gainFocus(self):
 		super(CodeEditor, self).event_gainFocus()
 		hwnd = getattr(self, "windowHandle", None)
+		# Undo starts here, before any typing (and notices a document that
+		# File > Open or New replaced).
+		_undo_record(self)
 		# Back in the editor: was the file changed by another program?
 		core.callLater(150, _check_disk, self)
 		before = _goToPending.pop(hwnd, None)
@@ -1478,6 +1603,37 @@ class CodeEditor(NVDAObject):
 
 	def script_ccGoForward(self, gesture):
 		_delegate("goForward", gesture)
+
+	def script_ccUndo(self, gesture):
+		if not _undo_enabled(self):
+			gesture.send()
+			return
+		try:
+			if _undo_redo(self, False):
+				return
+			if not _undo_history(self, _cache.get(self).text).steps:
+				# Nothing recorded yet: Notepad's own single step.
+				gesture.send()
+				return
+		except Exception:
+			log.debugWarning("Code Compass: undo failed", exc_info=True)
+			gesture.send()
+			return
+		# Translators: control+Z with no earlier step.
+		ui.message(_("Nothing to undo"))
+
+	def script_ccRedo(self, gesture):
+		if not _undo_enabled(self):
+			gesture.send()
+			return
+		try:
+			if _undo_redo(self, True):
+				return
+		except Exception:
+			log.debugWarning("Code Compass: redo failed", exc_info=True)
+			return
+		# Translators: control+Y with nothing undone to bring back.
+		ui.message(_("Nothing to redo"))
 
 	def script_ccBackspace(self, gesture):
 		if _conf()["autoClose"] and _writable_notepad(self):
@@ -1509,6 +1665,9 @@ class CodeEditor(NVDAObject):
 		"kb:alt+end": "ccBlockEnd",
 		"kb:control+s": "ccSave",
 		"kb:backspace": "ccBackspace",
+		"kb:control+z": "ccUndo",
+		"kb:control+y": "ccRedo",
+		"kb:control+shift+z": "ccRedo",
 		"kb:control+shift+s": "ccSaveAs",
 		"kb:enter": "ccEnter",
 		"kb:numpadEnter": "ccEnter",
@@ -3069,7 +3228,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		start = state["start"]
 		# After the last suggestion comes back what was typed.
 		word = state["prefix"] if index == len(words) else words[index]
-		if not _apply_edit(obj, a, start, caret, word, start + len(word)):
+		if not _apply_edit(obj, a, start, caret, word, start + len(word), typing=True):
 			return
 		state.update(index=index, text=a.text[:start] + word + a.text[caret:], caret=start + len(word))
 		self._completion = state
@@ -3941,6 +4100,11 @@ class CodeCompassSettingsPanel(SettingsPanel):
 			wx.CheckBox(self, label=_("Add closing brackets and &quotes automatically (Windows 10 Notepad)")),
 		)
 		self.autoClose.SetValue(c["autoClose"])
+		self.multiUndo = helper.addItem(
+			# Translators: checkbox for undo and redo of many steps in Notepad.
+			wx.CheckBox(self, label=_("Undo and redo many steps with control+Z and control+Y (Windows &10 Notepad)")),
+		)
+		self.multiUndo.SetValue(c["multiUndo"])
 		self.basePitch = helper.addLabeledControl(
 			# Translators: pitch of the level 1 tone.
 			_("Tone pitc&h for level 1 (Hz):"),
@@ -3983,6 +4147,7 @@ class CodeCompassSettingsPanel(SettingsPanel):
 		c["announceDeclarations"] = self.announceDeclarations.GetValue()
 		c["autoIndent"] = self.autoIndent.GetValue()
 		c["autoClose"] = self.autoClose.GetValue()
+		c["multiUndo"] = self.multiUndo.GetValue()
 		c["basePitch"] = self.basePitch.GetValue()
 		c["semitonesPerLevel"] = self.semitones.GetValue()
 		c["apps"] = self.apps.GetValue().strip()

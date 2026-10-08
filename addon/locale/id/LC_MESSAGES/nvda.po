@@ -70,6 +70,12 @@ msgstr "{count} masalah: {list}"
 msgid "Saved, no problems"
 msgstr "Tersimpan, tidak ada masalah"
 
+msgid "Nothing to undo"
+msgstr "Tidak ada yang bisa dibatalkan"
+
+msgid "Nothing to redo"
+msgstr "Tidak ada yang bisa diulang"
+
 msgid "&Declarations:"
 msgstr "&Deklarasi:"
 
@@ -609,6 +615,9 @@ msgstr "&Indentasi otomatis saat Enter dan kurung tutup (Notepad Windows 10)"
 
 msgid "Add closing brackets and &quotes automatically (Windows 10 Notepad)"
 msgstr "Tambahkan kurung tutup dan k&utip otomatis (Notepad Windows 10)"
+
+msgid "Undo and redo many steps with control+Z and control+Y (Windows &10 Notepad)"
+msgstr "Undo dan red&o berkali-kali dengan control+Z dan control+Y (Notepad Windows 10)"
 
 msgid "level {level}"
 msgstr "level {level}"

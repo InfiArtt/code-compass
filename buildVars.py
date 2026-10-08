@@ -18,7 +18,7 @@ addon_info = {
 		"(automatic indentation, comments, completion, line moves, rename)."
 	),
 	# version
-	"addon_version": "0.4.0",
+	"addon_version": "0.4.1",
 	# Author(s)
 	"addon_author": "Rafli I. <rafli08523717409@gmail.com>",
 	# URL for the add-on documentation support
