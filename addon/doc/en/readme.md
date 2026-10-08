@@ -68,7 +68,7 @@ Bookmarks are kept per file, also after closing Notepad or restarting NVDA. Each
 
 When you come back to Notepad and another program (an editor, a code generator, Git) has changed the open file, Code Compass notices:
 
-- With no unsaved changes, the file is reloaded right away and Code Compass says what changed, for example "latihan.py changed on disk and was reloaded: 1 line changed, 2 lines added". The caret stays on its line and bookmarks follow their lines.
+- With no unsaved changes, the file is reloaded right away and Code Compass says what changed, for example "practice.py changed on disk and was reloaded: 1 line changed, 2 lines added". The caret stays on its line and bookmarks follow their lines.
 - With unsaved changes, nothing is replaced: Code Compass tells you, and NVDA+shift+K then R reloads the file when you choose to. It asks first, and control+Z undoes the reload.
 - NVDA+shift+K then R also reloads at any time. Saving in Notepad does not count as a change.
 - Notepad++ watches its files itself (File, Reload from Disk), so Code Compass leaves it to Notepad++.

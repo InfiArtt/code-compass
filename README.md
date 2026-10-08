@@ -55,7 +55,7 @@ Download the `.nvda-addon` file from [GitHub Releases](https://github.com/InfiAr
 
 ## Getting started
 
-1. Open a code file in Notepad, for example [samples/latihan.py](samples/latihan.py) from this repository. Its first lines say what to try where.
+1. Open a code file in Notepad, for example [samples/practice.py](samples/practice.py) from this repository (in Indonesian: [samples/latihan.py](samples/latihan.py)). Its first lines say what to try where.
 2. Move up and down with the arrow keys and listen to the tones rise and fall.
 3. Press NVDA+shift+K, then W, to hear where you are. NVDA+shift+K, then H, lists every command, and control+shift+P lists them with their keys.
 4. Press control+F5 to run it.
@@ -91,7 +91,7 @@ The build writes `codeCompass-<version>.nvda-addon`. It needs no SCons or gettex
 - `addon/sounds/`: Visual Studio Code's accessibility signal sounds, as WAV files.
 - `addon/locale/id/LC_MESSAGES/nvda.po`: the Indonesian translation. `tools/update_po.py` rewrites it to match the messages in the code, and a test fails when a message has no translation.
 - `tests/`: analyzer tests, translation checks and tests of the plugin against stubbed NVDA and wx modules.
-- `samples/`: files to try the add-on with: `latihan.py` walks through the features, `rusak.js` is broken on purpose.
+- `samples/`: files to try the add-on with: `practice.py` (and `latihan.py`, the same in Indonesian) walks through the features, `rusak.js` is broken on purpose.
 
 ## Contributing
 
