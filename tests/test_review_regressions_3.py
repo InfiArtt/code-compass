@@ -8,6 +8,7 @@ import sys
 import tempfile
 import time
 import unittest
+from unittest import mock
 
 HERE = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(HERE, "..", "addon", "globalPlugins", "codeCompass"))
@@ -168,7 +169,10 @@ class SnippetNameTests(unittest.TestCase):
 		path = os.path.join(self.folder, "greet.py")
 		with open(path, "wb") as f:
 			f.write("print('café €')\n".encode("cp1252"))
-		self.assertEqual(snippets.list_snippets(self.folder)[0].read(), "print('café €')\n")
+		# The ANSI code page of a Western Windows (CI runs on Linux, where the
+		# locale's encoding is UTF-8).
+		with mock.patch.object(snippets.locale, "getencoding", return_value="cp1252", create=True):
+			self.assertEqual(snippets.list_snippets(self.folder)[0].read(), "print('café €')\n")
 
 	def test_utf16_reads(self):
 		path = os.path.join(self.folder, "wide.py")

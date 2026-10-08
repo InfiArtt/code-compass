@@ -1,0 +1,194 @@
+name: Build & Release Addon
+
+on:
+  # Release when main gets a version that has no release yet
+  push:
+    branches: [main]
+
+  # Also build (but don't release) on pull requests targeting main
+  pull_request:
+    branches: [main]
+
+  # Allow manual trigger from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Runs on the same branch queue instead of overlapping. Without this, two quick
+# pushes could both see a version as unreleased and both try to publish it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # -----------------------------------------------------------------------
+  # JOB 1: Test, then build the .nvda-addon
+  # -----------------------------------------------------------------------
+  build:
+    name: Test and build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      # NVDA 2026.1 and later run Python 3.13.
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      # The tests stub out NVDA and wx, so they run on any OS and need nothing
+      # beyond the standard library. A failure stops the build here.
+      - name: Run tests
+        env:
+          # Importing the add-on's modules would otherwise leave __pycache__
+          # folders inside addon/ (build.py skips them, but keep it clean).
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python -m unittest discover -s tests -v
+
+      # build.py is self-contained: it writes manifest.ini, compiles the
+      # translations and documentation, and zips the add-on. It has a small
+      # built-in Markdown converter, but uses the markdown package when it is
+      # installed, as it is on developers' machines, so releases match.
+      - name: Build addon
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python -m pip install --upgrade pip
+          pip install markdown
+          python build.py
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: packaged_addon
+          retention-days: 7
+          path: ./*.nvda-addon
+          if-no-files-found: error
+
+  # -----------------------------------------------------------------------
+  # JOB 2: Decide whether this push is a release
+  # -----------------------------------------------------------------------
+  # A release is published only when addon_version in buildVars.py has no
+  # release yet. Pushes that leave the version alone (docs, CI, ...) still
+  # build and upload the artifact, but publish nothing; otherwise the release
+  # step would replace an existing release's files with a rebuild under the
+  # same version.
+  version-check:
+    name: Check version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+      tag: ${{ steps.meta.outputs.tag }}
+      released: ${{ steps.meta.outputs.released }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Read version and look for an existing release
+        id: meta
+        run: |
+          # buildVars.py keeps it as: "addon_version": "1.2.3",
+          VERSION=$(grep -oP '"addon_version":\s*"\K[^"]+' buildVars.py || true)
+          if [ -z "$VERSION" ]; then
+            echo "::error file=buildVars.py::addon_version not found in buildVars.py"
+            exit 1
+          fi
+          TAG="v$VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG"         >> "$GITHUB_OUTPUT"
+
+          # --exit-code: 0 = tag exists, 2 = no such tag. Anything else is a
+          # failure to check, which must not be read as "not released": that
+          # is exactly the case that would publish a duplicate.
+          STATUS=0
+          git ls-remote --exit-code --tags origin "refs/tags/$TAG" > /dev/null || STATUS=$?
+          case "$STATUS" in
+            0) RELEASED=true ;;
+            2) RELEASED=false ;;
+            *) echo "::error::Could not check whether $TAG exists (git ls-remote exit $STATUS)"
+               exit 1 ;;
+          esac
+          echo "released=$RELEASED" >> "$GITHUB_OUTPUT"
+
+          if [ "$RELEASED" = true ]; then
+            {
+              echo "### $TAG is already released - nothing will be published"
+              echo "Bump \`addon_version\` in buildVars.py, with a matching CHANGELOG.md section, to publish a release."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          # A new version must come with release notes. No `grep -q`: it exits
+          # at the first match, and under pipefail the SIGPIPE in `tr` would
+          # fail the check at random.
+          if ! tr -d '\r' < CHANGELOG.md | grep -Fx "## Version $VERSION" > /dev/null; then
+            echo "::error file=CHANGELOG.md::No '## Version $VERSION' section for the new version $TAG"
+            exit 1
+          fi
+          echo "### $TAG is new - it will be published as a release" >> "$GITHUB_STEP_SUMMARY"
+
+  # -----------------------------------------------------------------------
+  # JOB 3: Create a GitHub Release (only on push to main, new version)
+  # -----------------------------------------------------------------------
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [build, version-check]
+    if: >-
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      needs.version-check.outputs.released == 'false'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: packaged_addon
+          path: .
+
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          VERSION="${{ needs.version-check.outputs.version }}"
+
+          # Only this version's section of CHANGELOG.md.
+          NOTES=$(tr -d '\r' < CHANGELOG.md | awk -v ver="## Version $VERSION" '
+            /^## / { if (found) exit; found=0 }
+            $0 == ver { found=1; next }
+            found { print }
+          ')
+
+          # Trim blank lines at the start and trailing spaces.
+          NOTES=$(echo "$NOTES" | sed -e '/./,$!d' -e 's/[[:space:]]*$//')
+
+          CHECKSUM=$(sha256sum *.nvda-addon | awk '{print $1, $2}')
+          BODY="${NOTES}"$'\n\n---\n**SHA256 Checksum:**\n```\n'"${CHECKSUM}"$'\n```'
+
+          {
+            echo "body<<EOF"
+            echo "$BODY"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ needs.version-check.outputs.tag }}
+          name: "Code Compass ${{ needs.version-check.outputs.version }}"
+          body: ${{ steps.changelog.outputs.body }}
+          files: "*.nvda-addon"
+          fail_on_unmatched_files: true
+          # Versions with a "-" (e.g. 1.0.0-beta) become pre-releases.
+          prerelease: ${{ contains(needs.version-check.outputs.version, '-') }}
+          # Never replace a file on a published release.
+          overwrite_files: false
